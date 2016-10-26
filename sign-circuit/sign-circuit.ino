@@ -32,8 +32,8 @@ uint32_t irCode = 0;
 //   NEO_GRB     Pixels are wired for GRB bitstream
 //   NEO_KHZ400  400 KHz bitstream (e.g. FLORA pixels)
 //   NEO_KHZ800  800 KHz bitstream (e.g. High Density LED strip)
-#define NEOPIXEL_PIN 4
-#define NUM_LEDS 10
+#define NEOPIXEL_PIN 3
+#define NUM_LEDS 46
 Adafruit_NeoPixel strip = Adafruit_NeoPixel(NUM_LEDS, NEOPIXEL_PIN, NEO_GRB + NEO_KHZ800);
 
 uint32_t blue          = strip.Color(0, 0, 255);
@@ -78,7 +78,7 @@ void loop() {
   uint32_t irCopy = irCode;
   uint32_t received_header = irCopy>>25;
   received_header = received_header << 1;
-  if (received_header == 0x86) {
+  if (irCode != 0) {
     for (int i = 0; i < 500; i++) {
       neopixel_plasma();
     }
