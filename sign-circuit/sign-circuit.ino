@@ -148,7 +148,7 @@ void loop() {
       blue_sparkles();
       chasePersist(NUM_LEDS, blue);
     } else if (currentMode == HERE) {
-      rainbowCycle(15);
+      indicateHere();
     }
   }
   else {
@@ -167,7 +167,7 @@ void loop() {
     else if (results.value == IR_REMOTE_PLAY) {
       Serial.println("PLAY");
       currentMode = HERE;
-      rainbowCycle(15);
+      indicateHere();
     }
 
     irrecv.resume(); // Receive the next value
@@ -176,4 +176,10 @@ void loop() {
 } // end loop
 
 
+void indicateHere() {
+  for (int i = 0; i < 500; i++) {
+    neopixel_plasma();
+  }
+    rainbowCycle(15);
+}
 
