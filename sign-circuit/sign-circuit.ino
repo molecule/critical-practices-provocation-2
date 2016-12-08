@@ -19,7 +19,9 @@ and http://learn.adafruit.com/trinket-gemma-mini-theramin-music-maker
 //   NEO_KHZ400  400 KHz bitstream (e.g. FLORA pixels)
 //   NEO_KHZ800  800 KHz bitstream (e.g. High Density LED strip)
 #define NEOPIXEL_PIN 9
-#define NUM_LEDS 46
+#define NUM_LEDS 29
+#define NUM_LEDS_HERE 12
+#define LEDS_HERE_START 16
 Adafruit_NeoPixel strip = Adafruit_NeoPixel(NUM_LEDS, NEOPIXEL_PIN, NEO_GRB + NEO_KHZ800);
 
 int delayVal = 50;
@@ -145,8 +147,7 @@ void loop() {
     digitalWrite(LED_PIN, HIGH);
     Serial.println("Motion detected!");
     if (currentMode == SOMEWHERE) {
-      blue_sparkles();
-      chasePersist(NUM_LEDS, blue);
+      indicateSomewhere();
     } else if (currentMode == HERE) {
       indicateHere();
     }
@@ -161,8 +162,7 @@ void loop() {
     if (results.value == IR_REMOTE_SELECT) {
       Serial.println("SELECT");
       currentMode = SOMEWHERE;
-      blue_sparkles();
-      chasePersist(NUM_LEDS, blue);
+      indicateSomewhere();
     }
     else if (results.value == IR_REMOTE_PLAY) {
       Serial.println("PLAY");
@@ -176,7 +176,15 @@ void loop() {
 } // end loop
 
 
+void indicateSomewhere() {
+  blue_sparkles();
+  chasePersist(NUM_LEDS, blue);
+}
 void indicateHere() {
+  // turn off the LEDS behind "SOMEW"
+  for (int i = 0; i < LEDS_HERE_START; i++) {
+    strip.setPixelColor(i, 0);
+  }
   for (int i = 0; i < 500; i++) {
     neopixel_plasma();
   }

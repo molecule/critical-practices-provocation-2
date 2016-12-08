@@ -181,16 +181,13 @@ void rainbow_sparks() {
   }
 }
 
-void callRainbowCycle() {
-  rainbowCycle(15);
-}
 // An equally distributed rainbow. Is there any other kind?
 void rainbowCycle(uint8_t wait) {
   uint16_t i, j;
 
   int x = 2;
   for(j=0; j<256*2; j++) { // x cycles of all colors on wheel
-    for(i=0; i< strip.numPixels(); i++) {
+    for(i=LEDS_HERE_START; i< strip.numPixels(); i++) {
       strip.setPixelColor(i, Wheel(((i * 256 / strip.numPixels()) + j) & 255));
     }
     strip.show();
@@ -438,6 +435,21 @@ static void chase() {
   }
 }
 
+// Input a value 0 to 255 to get a color value.
+// The colours are a transition r - g - b - back to r.
+uint32_t Wheel(byte WheelPos) {
+  WheelPos = 255 - WheelPos;
+  if(WheelPos < 85) {
+   return strip.Color(255 - WheelPos * 3, 0, WheelPos * 3);
+  } else if(WheelPos < 170) {
+    WheelPos -= 85;
+   return strip.Color(0, WheelPos * 3, 255 - WheelPos * 3);
+  } else {
+   WheelPos -= 170;
+   return strip.Color(WheelPos * 3, 255 - WheelPos * 3, 0);
+  }
+}
+
 /*
     Multicolored Plasma for the Arduino Micro-Controller and NeoPixel Shield
     Copyright (C) 2013 John Ericksen
@@ -454,6 +466,7 @@ static void chase() {
     along with this program.  If not, see http://www.gnu.org/licenses/.
 */
 
+// 12 LEDs in HERE
 // This function is called every frame.
 void neopixel_plasma() {
   phase += phaseIncrement;
@@ -469,11 +482,11 @@ void neopixel_plasma() {
   byte row, col;
   
   // For each row...
-  for( row=0; row<5; row++ ) {
+  for( row=0; row<4; row++ ) {
     float row_f = float(row);  // Optimization: Keep a floating point value of the row number, instead of recasting it repeatedly.
     
     // For each column...
-    for( col=0; col<8; col++ ) {
+    for( col=0; col<3; col++ ) {
       float col_f = float(col);  // Optimization.
       
       // Calculate the distance between this LED, and p1.
@@ -503,24 +516,9 @@ void neopixel_plasma() {
  
       // Scale the color up to 0..7 . Max brightness is 7.
       //strip.setPixelColor(col + (8 * row), strip.Color(color_4, 0, 0) );
-      strip.setPixelColor(col + (8 * row), strip.Color(color_1, color_2, color_3));
-      //strip.setPixelColor(col + (8 * row), strip.Color(color_1/4, color_2, color_3*5));
+      strip.setPixelColor(col + (4 * row)+LEDS_HERE_START, strip.Color(color_1, color_2, color_3));
+      //strip.setPixelColor(col + (8 * row)+LEDS_HERE_START, strip.Color(color_1/4, color_2, color_3*5));
     }
   }
   strip.show();
-}
-
-// Input a value 0 to 255 to get a color value.
-// The colours are a transition r - g - b - back to r.
-uint32_t Wheel(byte WheelPos) {
-  WheelPos = 255 - WheelPos;
-  if(WheelPos < 85) {
-   return strip.Color(255 - WheelPos * 3, 0, WheelPos * 3);
-  } else if(WheelPos < 170) {
-    WheelPos -= 85;
-   return strip.Color(0, WheelPos * 3, 255 - WheelPos * 3);
-  } else {
-   WheelPos -= 170;
-   return strip.Color(WheelPos * 3, 255 - WheelPos * 3, 0);
-  }
 }
