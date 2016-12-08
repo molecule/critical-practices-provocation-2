@@ -21,7 +21,7 @@ and http://learn.adafruit.com/trinket-gemma-mini-theramin-music-maker
 #define NEOPIXEL_PIN 9
 #define NUM_LEDS 29
 #define NUM_LEDS_HERE 12
-#define LEDS_HERE_START 16
+#define LEDS_HERE_START 18
 Adafruit_NeoPixel strip = Adafruit_NeoPixel(NUM_LEDS, NEOPIXEL_PIN, NEO_GRB + NEO_KHZ800);
 
 int delayVal = 50;
